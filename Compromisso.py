@@ -1,9 +1,10 @@
 import datetime
 class Compromisso:
-    def __init__(self, id, nome, descricao, data, hora):
+    def __init__(self, id, nome, descricao, data, hora, duracao):
         self.id = id
         self.nome = nome
         self.descricao = descricao
+        self.duracao = duracao
         string_datahora = f"{data} {hora}"
         try:
             self.datahora = datetime.datetime.strptime(string_datahora, "%d/%m/%Y %H:%M")
@@ -35,6 +36,10 @@ class Compromisso:
     #get para o id do compromisso
     def getid(self):
         return self.id
+    
+    #get para a duracao do compromisso
+    def getduracao(self):
+        return self.duracao
 
     #set para nome do compromisso
     def setnome(self,nome):

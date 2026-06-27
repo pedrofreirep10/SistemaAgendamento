@@ -9,28 +9,27 @@ class CalendarView:
         try:
             data_alvo = datetime.datetime.strptime(data_texto, "%d/%m/%Y").date()
         except ValueError:
-            print("Erro: Formato de data inválido. Use DD/MM/AAAA.")
+            print("\nErro: Formato de data inválido. Use DD/MM/AAAA.")
             return
 
         print(f"\n| Agenda do Dia: {data_texto}\n")
         encontrou_compromisso = False
-        
-        for comp in self.agenda:
-            if comp.getdata() == data_alvo:
-                hora = comp.gethora()
-                
-                if isinstance(hora, datetime.time):
-                    hora_str = hora.strftime("%H:%M")
-                else:
-                    hora_str = hora 
-                    
-                print(f"{hora_str}\t- {comp.getnome()} (Duração: {comp.getduracao()})")
-                
-                if comp.getdescricao():
-                    print(f"\tDetalhes: {comp.getdescricao()}\n")
-                
-                encontrou_compromisso = True
-                
+
+        compromissos_do_dia = sorted(
+            [comp for comp in self.agenda if comp.getdata() == data_alvo],
+            key=lambda c: c.gethora()
+        )
+
+        for comp in compromissos_do_dia:
+            hora = comp.gethora()
+            hora_str = hora.strftime("%H:%M") if isinstance(hora, datetime.time) else "??:??"
+            print(f"{hora_str}\t- {comp.getnome()} (Duração: {comp.getduracao()} min)")
+
+            if comp.getdescricao():
+                print(f"\tDetalhes: {comp.getdescricao()}\n")
+
+            encontrou_compromisso = True
+
         if not encontrou_compromisso:
             print("Nenhum compromisso agendado para este dia.")
         print("-" * 50)
@@ -42,11 +41,9 @@ class CalendarView:
             print("Erro: Formato de data inválido. Use DD/MM/AAAA.")
             return
 
-        print(f"\n| Agenda da semana")
-        
+        print(f"\n| Agenda da Semana a partir de {data_inicial_texto}\n")
+
         for i in range(7):
             dia_atual = data_inicial + datetime.timedelta(days=i)
             dia_atual_texto = dia_atual.strftime("%d/%m/%Y")
-            
             self.mostrar_dia(dia_atual_texto)
-
